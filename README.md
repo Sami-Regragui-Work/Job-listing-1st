@@ -11,8 +11,12 @@ A modern and interactive job listings management platform built with Vanilla Jav
 - [Demo](#demo)
 - [Installation](#installation)
 - [Performance Criteria](#performance-criteria)
+- [Implemented User Stories](#implemented-user-stories)
+- [Bonus Features](#bonus-features)
+- [Author](#author)
+- [License](#license)
 
-## 🎯 Overview
+## <div id="overview">🎯 Overview </div>
 
 This platform provides a complete solution for managing job listings, allowing users to view, filter, add, and manage job opportunities. The application stands out with its intuitive interface, responsiveness, and ability to persist data locally.
 
@@ -25,7 +29,7 @@ This platform provides a complete solution for managing job listings, allowing u
 - **✅ Robust Validation**: Form validation with instant feedback and contextual error messages
 - **♥️ Favorites System**: Personalized favorites management with dynamic counters
 
-## 🛠 Key Features
+## <div id="key-features">🛠 Key Features </div>
 
 ### 1. User Profile Management
 - Create and edit a profile (name, desired role)
@@ -64,7 +68,7 @@ This platform provides a complete solution for managing job listings, allowing u
 - Smooth interactions with transition animations
 - "Clear" button to reset filters
 
-## 💻 Technologies Used
+## <div id="technologies-used">💻 Technologies Used </div>
 
 - **Vanilla JavaScript**: Modular and functional architecture without frameworks
 - **HTML5**: Semantic structure with ARIA attributes for accessibility
@@ -73,17 +77,22 @@ This platform provides a complete solution for managing job listings, allowing u
 - **JSON**: Structured data format for job listings
 - **Google Fonts**: Modern typography with League Spartan
 
-## 📁 Project Structure
+## <div id="project-structure">📁 Project Structure </div>
 
 ```
 📦 job-platform
 ├── 📂 assets/
 │   ├── 📂 data/
-│   │   └── 📄 data.json          # JSON database of listings (id, company, position, skills, etc.)
-│   ├── 📄 starter.js             # Main JavaScript script (business logic, CRUD, filters)
-│   └── 📄 style.css              # Full stylesheet (layout, components, animations)
-├── 📄 index.html                 # Main HTML structure with tabs and modals
-└── 📄 README.md                  # Project documentation
+│   │   └── 📄 data.json                    # Base de données JSON des offres (id, company, position, skills, etc.)
+│   ├── 📂 images/
+│   │   ├── 🖼️ ajouter-une-nouvelle-offre-scsh.png    # Capture d'écran : ajout d'offre
+│   │   ├── 🖼️ gerer-les-offres-scsh.png              # Capture d'écran : gestion des offres
+│   │   ├── 🖼️ mes-favoris-scsh.png                   # Capture d'écran : onglet favoris
+│   │   └── 🖼️ mon-profil-scsh.png                    # Capture d'écran : profil utilisateur
+│   ├── 📄 starter.js                       # Script principal JavaScript (logique métier, CRUD, filtres)
+│   └── 📄 style.css                        # Feuille de styles complète (layout, composants, animations)
+├── 📄 index.html                           # Structure HTML principale avec onglets et modales
+└── 📄 README.md                            # Documentation du projet
 ```
 
 ### File Descriptions
@@ -124,7 +133,7 @@ This platform provides a complete solution for managing job listings, allowing u
     - Two modals (listing details / manage listing)
     - Forms with validation and accessibility
 
-## 🎬 Demo
+## <div id="demo">📺 Demo </div>
 
 The application is hosted on GitHub Pages and accessible via the following link:  
 **[🔗 View the live demo](https://sami-regragui-work.github.io/job-platform/)**
@@ -144,7 +153,7 @@ The application is hosted on GitHub Pages and accessible via the following link:
 ![Add Listing Form Screenshot](/assets/images/ajouter-une-nouvelle-offre-scsh.png)
 
 
-## 🚀 Installation
+## <div id="installation">📥 Installation </div>
 
 ### Prerequisites
 - Modern web browser (Chrome, Firefox, Safari, Edge)
@@ -169,7 +178,7 @@ The application is hosted on GitHub Pages and accessible via the following link:
      - Add listings to favorites
      - Create new listings via "Manage Listings"
 
-## ✅ Performance Criteria
+## <div id="performance-criteria">⚙️ Performance Criteria </div>
 
 The application meets the following performance criteria:
 
@@ -180,7 +189,7 @@ The application meets the following performance criteria:
 - ✅ **Operational Search and Filtering**: Real-time result updates with counters
 - ✅ **Reliable Persistence**: localStorage for profile, favorites, and custom listings
 
-## 🎓 Implemented User Stories
+## <div id="implemented-user-stories">✅ Implemented User Stories </div>
 
 ### Form Management
 - ✅ Error messages shown for invalid profile data
@@ -209,21 +218,21 @@ The application meets the following performance criteria:
 - ✅ Responsive interface on mobile and desktop
 - ✅ Visual feedback on all interactions
 
-## 🌟 Bonus Features
+## <div id="bonus-features">🎉 Bonus Features </div>
 
 - **Advanced Regex**: Strict validation for URLs and specific formats
 - **Transition Animations**: Smooth visual effects for modals and tabs
 - **Dynamic Counters**: Real-time display of favorites and result counts
 - **ARIA Accessibility**: Screen reader support with appropriate attributes
 
-## 👨‍💻 Author
+## <div id="author">👤 Author </div>
 
 **Sami Regragui**  
 Project completed as part of the YouCode Youssoufia training, supervised by Mr. Aymane Benhima
 
 ---
 
-## 📄 License
+## <div id="license">📄 License </div>
 
 This project is an educational project. Can be used for learning purposes without restrictions, or for commercial use with this readme included.
 
