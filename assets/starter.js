@@ -203,12 +203,21 @@ document.addEventListener('DOMContentLoaded', () => {
      * @function renderProfileSkills
      */
     const renderProfileSkills = () => {
-        // TODO: Implement skills rendering
+        // DONE: Implement skills rendering
         // Use this HTML template for each skill:
         // `<li class="profile-skill-tag" data-skill="${skill}">
         //     <span>${skill}</span>
         //     <button class="profile-skill-remove" aria-label="Remove skill ${skill}">✕</button>
         //  </li>`
+
+        let skill = userProfile.skills.at(-1);
+        if (skill) {
+            profileSkillsList.innerHTML+=
+                `<li class="profile-skill-tag" data-skill="${skill}">
+                    <span>${skill}</span>
+                    <button class="profile-skill-remove" aria-label="Remove skill ${skill}">✕</button>
+                </li>`;
+        }
     };
 
     /**
@@ -243,6 +252,24 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Get skill value
         // 3. Add to profile if not duplicate
         // 4. Re-render skills and apply filters
+
+        let skill = e.target.value.trim();
+        let lowerCaseSkill = skill.toLowerCase();
+        let key = e.key;
+        // console.log(`"${key}"`);
+        if (key === 'Enter') {
+            e.preventDefault();
+            if (skill!=='' &&
+                !userProfile.skills.some(skill => skill.toLowerCase()===lowerCaseSkill)) {
+                userProfile.skills.push(skill);
+                renderProfileSkills();
+                applyAllFilters();
+            } 
+            // else {
+            //     console.log("don't add");
+            // }
+                e.target.value='';
+        }
     };
 
     /**
@@ -256,6 +283,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Get skill name
         // 3. Remove from profile
         // 4. Re-render and apply filters
+
+        // let skillRemBtns = document.getElementsByClassName("profile-skill-remove");
+        // // for (let btn of skillRemBtns){
+        // //     btn.addEventListener('click', handleSkillRemove)
+        // // }
+        // Array.from(skillRemBtns).forEach(btn => btn.addEventListener('click', e => {
+        //     console.log("prevented");
+        //     e.preventDefault()}));
+
+        // btn.preventDefault();
+        // console.log(e.target.tagName);
+        if (e.target.tagName === 'BUTTON') {
+            e.preventDefault();
+            e.stopPropagation();
+            let btn = e.target;
+            let skill = btn.previousSibling.textContent;
+            userProfile.skills.splice(userProfile.skills.indexOf(skill), 1); // 1 for remove, 0 for insert
+            btn.parentNode.remove();
+            applyAllFilters();
+        }
+
     };
 
     // ------------------------------------
@@ -548,6 +596,57 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Combine profile skills and manual filters
         // 3. Filter jobs by tags and search term
         // 4. Update all UI components
+
+
+        // 1###########################################
+        // console.log("entered successfully");
+        const talc = (str) => str.trim().toLowerCase();
+
+        const searchFilter = () => {
+            let sTerm = talc(searchInput.value);
+            let enteredSkills = userProfile.skills;
+            // console.log(userProfile.skills);
+            // let combine = [...enteredSkills, sTerm];
+            // let fArray = allJobs.filter(
+            //     (filter, index) => {
+            //         let found;
+            //         let indices = new Set();
+            //         found = talc(filter.position).includes(sTerm);
+            //         if (found) {indices.add(index)}
+            //         found = talc(filter.company).includes(sTerm);
+            //         if (found) {indices.add(index)}
+            //         found = talc(filter.contract).includes(sTerm);
+            //         if (found) {indices.add(index)}
+            //         found = talc(filter.description).includes(sTerm);
+            //         if (found) {indices.add(index)}
+            //         found = talc(filter.location).includes(sTerm);
+            //         if (found) {indices.add(index)}
+            //         found = Array(filter.skills).some(skill => talc(skill).includes(sTerm));
+            //         if (found) {indices.add(index)}
+            //     }
+            // )
+            let skillFArray = enteredSkills.length ? allJobs.filter(
+                (filter) => 
+                    filter.skills.some(resultSkill => enteredSkills.some(oneEnteredSkill => talc(resultSkill) === talc(oneEnteredSkill)))
+            ) : allJobs;
+            console.log(skillFArray);
+            let fArray = skillFArray.filter(
+                (filter) =>
+                    filter.skills.some(resultSkill => talc(resultSkill) === sTerm) ||
+                    talc(filter.position).includes(sTerm) ||
+                    talc(filter.company).includes(sTerm) ||
+                    talc(filter.contract).includes(sTerm) ||
+                    talc(filter.description).includes(sTerm) ||
+                    talc(filter.location).includes(sTerm)
+            )
+            console.log(fArray);
+            renderJobs(fArray);
+        }
+        // searchInput.addEventListener('input', searchFilter);
+        searchFilter();
+        
+
+        // profileSkillsList.appendChild();
     };
 
     // ------------------------------------
@@ -574,6 +673,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleFilterBarClick = (e) => {
         // TODO: Implement filter removal
         // Handle clicks on filter tag remove buttons
+
+        
+        
     };
 
     /**
@@ -614,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProfileSkills();
         renderFavoritesCount();
         setupTabs();
-        applyAllFilters();
+        // applyAllFilters();
 
         // Modal events
         viewModalCloseBtn.addEventListener('click', closeViewModal);
@@ -627,7 +729,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Initial job display
         renderJobs(allJobs);
-        
+
+        // skills input EL
+        skillInput.addEventListener('keydown', handleSkillAdd);
+        // skills list EL
+        profileSkillsList.addEventListener('click', handleSkillRemove);
+        // search input EL
+        // searchInput.addEventListener('input', handleFilterBarClick);
+        searchInput.addEventListener('input', applyAllFilters);
+
         // TODO: Add remaining event listeners
         // Profile events
         // Filter events  
