@@ -549,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @function renderManageList
      */
     const renderManageList = () => {
-        // TODO: Implement manage list rendering
+        // DONE: Implement manage list rendering
         // Use this HTML template for each job:
         // `<li class="manage-job-item" data-job-id="${job.id}">
         //     <img src="${job.logo}" alt="" class="job-card__logo" style="position: static; width: 48px; height: 48px; border-radius: 5px;">
@@ -645,11 +645,26 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {Event} e - Click event
      */
     const handleManageListClick = (e) => {
-        // TODO: Implement edit/delete functionality
+        // DONE: Implement edit/delete functionality
         // 1. Determine if edit or delete button clicked
         // 2. Get job ID
         // 3. For edit: open manage modal with job data
         // 4. For delete: confirm and remove job
+        let btns = manageJobsList.querySelectorAll("button");
+        let jobId = Number(e.target.closest("li").getAttribute("data-job-id"));
+        if (e.target === btns[0]) openManageModal(jobId);
+        else if (e.target === btns[1]) {
+            let choice = confirm(
+                `You sure you want to delete '${
+                    allJobs[jobId - 1].position
+                }' from the listing?`
+            );
+            if (choice) {
+                e.target.closest("li").remove();
+                allJobs.splice(jobId - 1, 1);
+                applyAllFilters();
+            }
+        }
     };
 
     // ------------------------------------
@@ -1029,25 +1044,26 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("save-job-btn")
             .addEventListener("click", handleManageFormSubmit);
         // manage edit and delete
-        manageJobsList.addEventListener("click", (e) => {
-            let btns = manageJobsList.querySelectorAll("button");
-            let jobId = Number(
-                e.target.closest("li").getAttribute("data-job-id")
-            );
-            if (e.target === btns[0]) openManageModal(jobId);
-            else if (e.target === btns[1]) {
-                let choice = confirm(
-                    `You sure you want to delete '${
-                        allJobs[jobId - 1].position
-                    }' from the listing?`
-                );
-                if (choice) {
-                    e.target.closest("li").remove();
-                    allJobs.splice(jobId - 1, 1);
-                    applyAllFilters();
-                }
-            }
-        });
+        // manageJobsList.addEventListener("click", (e) => {
+        // let btns = manageJobsList.querySelectorAll("button");
+        // let jobId = Number(
+        //     e.target.closest("li").getAttribute("data-job-id")
+        // );
+        // if (e.target === btns[0]) openManageModal(jobId);
+        // else if (e.target === btns[1]) {
+        //     let choice = confirm(
+        //         `You sure you want to delete '${
+        //             allJobs[jobId - 1].position
+        //         }' from the listing?`
+        //     );
+        //     if (choice) {
+        //         e.target.closest("li").remove();
+        //         allJobs.splice(jobId - 1, 1);
+        //         applyAllFilters();
+        //     }
+        // }
+        // });
+        manageJobsList.addEventListener("click", handleManageListClick);
 
         // adding manual filter tags
         renderManualFilterTags();
