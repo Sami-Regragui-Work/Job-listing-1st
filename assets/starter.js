@@ -380,9 +380,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 favoriteJobIds.includes(filter.id)
             );
             favoriteJobsContainer.innerHTML = "";
-            console.log(favArr);
+            // console/.log(favArr);
             favArr.forEach((job) => {
-                console.log(job);
+                // console/.log(job);
                 favoriteJobsContainer.innerHTML += createJobCardHTML(job);
             });
         }
@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Add or remove from favorites array
         // 3. Save to localStorage
         // 4. Update UI
-        console.log("fav id " + jobId);
+        // console/.log("fav id " + jobId);
         let index = favoriteJobIds.indexOf(jobId);
         let jobArticle = jobListingsContainer.querySelector(
             `[data-job-id='${jobId}']`
@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.classList.toggle("job-card__favorite-btn--active");
         btn.textContent = btn.textContent.trim() === "☆" ? " ★ " : " ☆ ";
         if (index < 0) {
-            console.log("didn't find it so it's added now");
+            // console/.log("didn't find it so it's added now");
             favoriteJobIds.push(jobId);
         } else {
             favoriteJobIds.splice(index, 1);
@@ -562,18 +562,13 @@ document.addEventListener("DOMContentLoaded", () => {
         //         <button class="btn btn--danger btn-delete">Delete</button>
         //     </div>
         //  </li>`
-        jobIdInput.setAttribute("value", allJobs.at(-1).id + 1);
-
-        // jobIdInput.value =
-        // jobCompanyInput.value =
-        // jobPositionInput.value =
-        // jobLogoInput.value =
-        // jobContractInput.value =
-        // jobLocationInput.value =
-        // jobRoleInput.value =
-        // jobLevelInput.value =
-        // jobSkillsInput.value =
-        // jobDescriptionInput.value =
+        // if (allJobs.find(jobElem => jobElem.id === )) allJobs.push(job);
+        console.log("render manage list");
+        const jobId = jobIdInput.getAttribute("value");
+        if (!jobId) {
+            jobIdInput.setAttribute("value", allJobs.at(-1).id + 1);
+            console.log("here");
+        }
 
         let job = { ...allJobs[0] };
 
@@ -588,13 +583,10 @@ document.addEventListener("DOMContentLoaded", () => {
         job.skills = jobSkillsInput.value.split(", ");
         job.description = jobDescriptionInput.value;
 
-        allJobs.push(job);
+        if (!jobId) {
+            allJobs.push(job);
 
-        console.log("after pushing");
-
-        console.log(allJobs);
-
-        manageJobsList.innerHTML += `<li class="manage-job-item" data-job-id="${job.id}">
+            manageJobsList.innerHTML += `<li class="manage-job-item" data-job-id="${job.id}">
             <img src="${job.logo}" alt="" class="job-card__logo" style="position: static; width: 48px; height: 48px; border-radius: 5px;">
             <div class="manage-job-item__info">
                 <h4>${job.position}</h4>
@@ -605,9 +597,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 <button class="btn btn--danger btn-delete">Delete</button>
             </div>
          </li>`;
+        } else {
+            console.log("modifying");
+            allJobs.splice(jobId - 1, 1, job);
+            manageJobsList.querySelector(
+                `[data-job-id='${jobId}']`
+            ).innerHTML = `<img src="${job.logo}" alt="" class="job-card__logo" style="position: static; width: 48px; height: 48px; border-radius: 5px;">
+            <div class="manage-job-item__info">
+                <h4>${job.position}</h4>
+                <p>${job.company} - ${job.location}</p>
+            </div>
+            <div class="manage-job-item__actions">
+                <button class="btn btn--secondary btn-edit">Edit</button>
+                <button class="btn btn--danger btn-delete">Delete</button>
+            </div>`;
+        }
+
+        // console/.log("after pushing");
+
+        // console/.log(allJobs);
 
         applyAllFilters();
-        console.log(job);
+        // console/.log(job);
     };
 
     /**
@@ -725,7 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @function renderManualFilterTags
      */
     const renderManualFilterTags = () => {
-        // TODO: Implement filter tags rendering
+        // DONE: Implement filter tags rendering
         // Use this HTML template for each tag:
         // `<div class="filter-bar__tag" data-tag="${tag}">
         //     <span class="filter-bar__tag-name">${tag}</span>
@@ -762,7 +773,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {number} totalCount - Total number of jobs
      */
     const renderStats = (matchCount, totalCount) => {
-        // TODO: Implement stats rendering
+        // DONE: Implement stats rendering
         // Show different messages based on active filters
         let statsP = statsCounter.firstElementChild; //1stElemChild gives tags, 1stChild gives even whitespaces (it made me change \n before the <p> instead of targeting that later)
         // console/.log(statsP);
@@ -780,13 +791,12 @@ document.addEventListener("DOMContentLoaded", () => {
      * @function applyAllFilters
      */
     const applyAllFilters = () => {
-        // TODO: Implement comprehensive filtering
+        // DONE: Implement comprehensive filtering
         // 1. Get search term
         // 2. Combine profile skills and manual filters
         // 3. Filter jobs by tags and search term
         // 4. Update all UI components
 
-        // 1###########################################
         // console/.log("#1");
 
         const searchFilter = () => {
@@ -873,10 +883,30 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {Event} e - Click event
      */
     const handleJobListClick = (e) => {
-        // TODO: Implement job list click handling
+        // DONE: Implement job list click handling
         // 1. Handle tag clicks (add to filters)
         // 2. Handle favorite button clicks
         // 3. Handle card clicks (open modal)
+        // ################################
+        let theTarget = e.target;
+        if (theTarget.classList[0] === "job-card__tag") {
+            let tag = theTarget.getAttribute("data-tag");
+            manualFilters.push(tag);
+            filterTagsContainer.innerHTML += `<div class="filter-bar__tag" data-tag="${tag}">
+                        <span class="filter-bar__tag-name">${tag}</span>
+                        <button class="filter-bar__tag-remove" aria-label="Remove filter ${tag}">✕</button>
+                    </div>`;
+            applyAllFilters();
+        } else
+            theTarget.tagName === "BUTTON"
+                ? toggleFavorite(Number(theTarget.getAttribute("data-job-id")))
+                : openViewModal(
+                      Number(
+                          theTarget
+                              .closest("article")
+                              .getAttribute("data-job-id")
+                      )
+                  );
     };
 
     /**
@@ -885,7 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {Event} e - Click event
      */
     const handleFilterBarClick = (e) => {
-        // TODO: Implement filter removal
+        // DONE: Implement filter removal
         // Handle clicks on filter tag remove buttons
         if (e.target.classList.contains("filter-bar__tag-remove")) {
             let tagText = e.target.previousSibling.textContent;
@@ -946,6 +976,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // Modal events
         viewModalCloseBtn.addEventListener("click", closeViewModal);
         viewModal.addEventListener("click", (e) => {
+            if (e.target.classList[0] === "job-card__tag") {
+                let tag = e.target.textContent;
+                manualFilters.push(tag);
+                filterTagsContainer.innerHTML += `<div class="filter-bar__tag" data-tag="${tag}">
+                            <span class="filter-bar__tag-name">${tag}</span>
+                            <button class="filter-bar__tag-remove" aria-label="Remove filter ${tag}">✕</button>
+                        </div>`;
+                applyAllFilters();
+            }
             if (e.target === viewModal) closeViewModal();
         });
         manageModalCloseBtn.addEventListener("click", closeManageModal);
@@ -969,23 +1008,46 @@ document.addEventListener("DOMContentLoaded", () => {
         // clear EL
         filterBar.addEventListener("click", handleFilterBarClick);
         // job listing EL
-        const favoriteQuickFunc = (e) =>
-            e.target.tagName === "BUTTON"
-                ? toggleFavorite(Number(e.target.getAttribute("data-job-id")))
-                : openViewModal(
-                      Number(
-                          e.target
-                              .closest("article")
-                              .getAttribute("data-job-id")
-                      )
-                  );
-        jobListingsContainer.addEventListener("click", favoriteQuickFunc);
-        favoriteJobsContainer.addEventListener("click", favoriteQuickFunc);
+
+        // const favoriteQuickFunc = (e) =>
+        // e.target.tagName === "BUTTON"
+        //     ? toggleFavorite(Number(e.target.getAttribute("data-job-id")))
+        //     : openViewModal(
+        //           Number(
+        //               e.target
+        //                   .closest("article")
+        //                   .getAttribute("data-job-id")
+        //           )
+        //       );
+        // jobListingsContainer.addEventListener("click", favoriteQuickFunc);
+        // favoriteJobsContainer.addEventListener("click", favoriteQuickFunc);
+        jobListingsContainer.addEventListener("click", handleJobListClick);
+        favoriteJobsContainer.addEventListener("click", handleJobListClick);
 
         // manage listing EL
         document
             .getElementById("save-job-btn")
             .addEventListener("click", handleManageFormSubmit);
+        // manage edit and delete
+        manageJobsList.addEventListener("click", (e) => {
+            let btns = manageJobsList.querySelectorAll("button");
+            let jobId = Number(
+                e.target.closest("li").getAttribute("data-job-id")
+            );
+            if (e.target === btns[0]) openManageModal(jobId);
+            else if (e.target === btns[1]) {
+                let choice = confirm(
+                    `You sure you want to delete '${
+                        allJobs[jobId - 1].position
+                    }' from the listing?`
+                );
+                if (choice) {
+                    e.target.closest("li").remove();
+                    allJobs.splice(jobId - 1, 1);
+                    applyAllFilters();
+                }
+            }
+        });
 
         // adding manual filter tags
         renderManualFilterTags();
