@@ -353,7 +353,8 @@ document.addEventListener("DOMContentLoaded", () => {
      * @function renderFavoritesCount
      */
     const renderFavoritesCount = () => {
-        // TODO: Update favorites count in tab
+        // DONE: Update favorites count in tab
+        favoritesCount.textContent = `(${favoriteJobIds.length})`;
     };
 
     /**
@@ -365,6 +366,29 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Filter jobs by favorite IDs
         // 2. Use createJobCardHTML for each job
         // 3. Show empty message if no favorites
+
+        // favoriteJobIds.forEach(
+        //     (id) => allJobs.filter(
+        //         (filter) => id == filter.id
+        //     )
+        // )
+        if (!favoriteJobIds.length)
+            favoriteJobsContainer.innerHTML =
+                "<p style='text-align:center;'>You don't have any favorite yet</p>";
+        else {
+            let favArr = allJobs.filter((filter) =>
+                favoriteJobIds.includes(filter.id)
+            );
+            favoriteJobsContainer.innerHTML = "";
+            console.log(favArr);
+            favArr.forEach((job) => {
+                // console.log(job);
+                favoriteJobsContainer.innerHTML += createJobCardHTML(job);
+            });
+        }
+        renderFavoritesCount();
+        // .forEach((job) => createJobCardHTML(job));
+        // createJobCardHTML();
     };
 
     /**
@@ -378,6 +402,25 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Add or remove from favorites array
         // 3. Save to localStorage
         // 4. Update UI
+        console.log("fav id " + jobId);
+        let index = favoriteJobIds.indexOf(jobId);
+        let jobArticle = jobListingsContainer.querySelector(
+            `[data-job-id='${jobId}']`
+        );
+        let btn = jobArticle.querySelector("button");
+        // console.log("previous star");
+
+        // console.log(btn.textContent);
+        // console.log(btn.textContent === " ☆ ");
+        btn.classList.toggle("job-card__favorite-btn--active");
+        btn.textContent = btn.textContent.trim() === "☆" ? " ★ " : " ☆ ";
+        if (index < 0) {
+            favoriteJobIds.push(jobId);
+        } else {
+            favoriteJobIds.splice(index, 1);
+        }
+        // console.log(btn);
+        renderFavoriteJobs();
     };
 
     // ------------------------------------
@@ -424,7 +467,9 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {number} jobId - Job ID to display
      */
     const openViewModal = (jobId) => {
+        console.log("open modal by id " + jobId);
         const job = allJobs.find((j) => j.id === jobId);
+        console.log(job);
         if (job) {
             document.getElementById("modal-logo").src =
                 job.logo ||
@@ -696,12 +741,14 @@ document.addEventListener("DOMContentLoaded", () => {
             let sTerm = talc(searchInput.value);
             let enteredSkills = userProfile.skills;
 
-            fArray =
-                enteredSkills.length || manualFilters.length || sTerm
-                    ? allJobs
-                    : [];
+            // fArray =
+            //     enteredSkills.length || manualFilters.length || sTerm
+            //         ? allJobs
+            //         : [];
             // console.log("start fArray");
             // console.log(fArray);
+
+            fArray = allJobs;
 
             if (enteredSkills.length) {
                 fArray = fArray.filter((filter) =>
@@ -750,7 +797,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // console.log(fArray);
 
             renderJobs(fArray);
-            renderStats(fArray.length, allJobs.length);
+            renderStats(
+                enteredSkills.length || manualFilters.length || sTerm
+                    ? fArray.length
+                    : 0,
+                allJobs.length
+            );
 
             // console.log("filtered array");
             // console.log(fArray);
@@ -853,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
         addNewJobBtn.addEventListener("click", () => openManageModal());
 
         // Initial job display
-        // renderJobs(allJobs);
+        renderJobs(allJobs);
 
         // skills input EL
         skillInput.addEventListener("keydown", handleSkillAdd);
@@ -864,6 +916,19 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.addEventListener("input", applyAllFilters);
         // clear EL
         filterBar.addEventListener("click", handleFilterBarClick);
+        // job listing EL
+        const favoriteQuickFunc = (e) =>
+            e.target.tagName === "BUTTON"
+                ? toggleFavorite(Number(e.target.getAttribute("data-job-id")))
+                : openViewModal(
+                      Number(
+                          e.target
+                              .closest("article")
+                              .getAttribute("data-job-id")
+                      )
+                  );
+        jobListingsContainer.addEventListener("click", favoriteQuickFunc);
+        favoriteJobsContainer.addEventListener("click", favoriteQuickFunc);
 
         // adding manual filter tags
         renderManualFilterTags();
