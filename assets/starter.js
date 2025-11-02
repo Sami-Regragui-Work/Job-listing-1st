@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {KeyboardEvent} e - Keydown event
      */
     const handleSkillAdd = (e) => {
-        // TODO: Implement skill addition on Enter key
+        // DONE: Implement skill addition on Enter key
         // 1. Check if Enter key was pressed
         // 2. Get skill value
         // 3. Add to profile if not duplicate
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let skill = e.target.value.trim();
         let lowerCaseSkill = skill.toLowerCase();
         let key = e.key;
-        // console.log(`"${key}"`);
+        // console/.log(`"${key}"`);
         if (key === "Enter") {
             e.preventDefault();
             if (
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 applyAllFilters();
             }
             // else {
-            //     console.log("don't add");
+            //     console/.log("don't add");
             // }
             e.target.value = "";
         }
@@ -300,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {Event} e - Click event
      */
     const handleSkillRemove = (e) => {
-        // TODO: Implement skill removal
+        // DONE: Implement skill removal
         // 1. Find clicked remove button
         // 2. Get skill name
         // 3. Remove from profile
@@ -311,11 +311,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // //     btn.addEventListener('click', handleSkillRemove)
         // // }
         // Array.from(skillRemBtns).forEach(btn => btn.addEventListener('click', e => {
-        //     console.log("prevented");
+        //     console/.log("prevented");
         //     e.preventDefault()}));
 
         // btn.preventDefault();
-        // console.log(e.target.tagName);
+        // console/.log(e.target.tagName);
         if (e.target.tagName === "BUTTON") {
             e.preventDefault();
             e.stopPropagation();
@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let skill = btn.previousSibling.textContent;
             userProfile.skills.splice(userProfile.skills.indexOf(skill), 1); // 1 for remove, 0 for insert
             btn.parentNode.remove();
-            console.log("removed");
+            // console/.log("removed");
             applyAllFilters();
         }
     };
@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
      * @function renderFavoriteJobs
      */
     const renderFavoriteJobs = () => {
-        // TODO: Implement favorites rendering
+        // DONE: Implement favorites rendering
         // 1. Filter jobs by favorite IDs
         // 2. Use createJobCardHTML for each job
         // 3. Show empty message if no favorites
@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
             favoriteJobsContainer.innerHTML = "";
             console.log(favArr);
             favArr.forEach((job) => {
-                // console.log(job);
+                console.log(job);
                 favoriteJobsContainer.innerHTML += createJobCardHTML(job);
             });
         }
@@ -408,18 +408,21 @@ document.addEventListener("DOMContentLoaded", () => {
             `[data-job-id='${jobId}']`
         );
         let btn = jobArticle.querySelector("button");
-        // console.log("previous star");
+        // console/.log("previous star");
 
-        // console.log(btn.textContent);
-        // console.log(btn.textContent === " ☆ ");
+        // console/.log(btn.textContent);
+        // console/.log(btn.textContent === " ☆ ");
         btn.classList.toggle("job-card__favorite-btn--active");
         btn.textContent = btn.textContent.trim() === "☆" ? " ★ " : " ☆ ";
         if (index < 0) {
+            console.log("didn't find it so it's added now");
             favoriteJobIds.push(jobId);
         } else {
             favoriteJobIds.splice(index, 1);
         }
-        // console.log(btn);
+        // still need save
+
+        // console/.log(btn);
         renderFavoriteJobs();
     };
 
@@ -453,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Load tab-specific content
             if (tabId === "favorites") renderFavoriteJobs();
-            if (tabId === "manage") renderManageList();
+            // if (tabId === "manage") renderManageList();
         });
     };
 
@@ -467,9 +470,9 @@ document.addEventListener("DOMContentLoaded", () => {
      * @param {number} jobId - Job ID to display
      */
     const openViewModal = (jobId) => {
-        console.log("open modal by id " + jobId);
+        // console/.log("open modal by id " + jobId);
         const job = allJobs.find((j) => j.id === jobId);
-        console.log(job);
+        // console/.log(job);
         if (job) {
             document.getElementById("modal-logo").src =
                 job.logo ||
@@ -559,6 +562,52 @@ document.addEventListener("DOMContentLoaded", () => {
         //         <button class="btn btn--danger btn-delete">Delete</button>
         //     </div>
         //  </li>`
+        jobIdInput.setAttribute("value", allJobs.at(-1).id + 1);
+
+        // jobIdInput.value =
+        // jobCompanyInput.value =
+        // jobPositionInput.value =
+        // jobLogoInput.value =
+        // jobContractInput.value =
+        // jobLocationInput.value =
+        // jobRoleInput.value =
+        // jobLevelInput.value =
+        // jobSkillsInput.value =
+        // jobDescriptionInput.value =
+
+        let job = { ...allJobs[0] };
+
+        job.id = Number(jobIdInput.value); // OMG this type conversion made me go through HELL!!!
+        job.company = jobCompanyInput.value;
+        job.position = jobPositionInput.value;
+        job.logo = jobLogoInput.value || "";
+        job.contract = jobContractInput.value;
+        job.location = jobLocationInput.value;
+        job.role = jobRoleInput.value;
+        job.level = jobLevelInput.value;
+        job.skills = jobSkillsInput.value.split(", ");
+        job.description = jobDescriptionInput.value;
+
+        allJobs.push(job);
+
+        console.log("after pushing");
+
+        console.log(allJobs);
+
+        manageJobsList.innerHTML += `<li class="manage-job-item" data-job-id="${job.id}">
+            <img src="${job.logo}" alt="" class="job-card__logo" style="position: static; width: 48px; height: 48px; border-radius: 5px;">
+            <div class="manage-job-item__info">
+                <h4>${job.position}</h4>
+                <p>${job.company} - ${job.location}</p>
+            </div>
+            <div class="manage-job-item__actions">
+                <button class="btn btn--secondary btn-edit">Edit</button>
+                <button class="btn btn--danger btn-delete">Delete</button>
+            </div>
+         </li>`;
+
+        applyAllFilters();
+        console.log(job);
     };
 
     /**
@@ -574,6 +623,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // 4. Add new job or update existing
         // 5. Save to localStorage
         // 6. Update UI and close modal
+        e.preventDefault();
+        renderManageList();
+        closeManageModal();
     };
 
     /**
@@ -681,7 +733,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //  </div>`
 
         searchInput.addEventListener("keydown", (e) => {
-            // console.log(e.key);
+            // console/.log(e.key);
             if (e.key === "Enter") {
                 let tag = e.target.value.trim();
                 if (
@@ -713,7 +765,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // TODO: Implement stats rendering
         // Show different messages based on active filters
         let statsP = statsCounter.firstElementChild; //1stElemChild gives tags, 1stChild gives even whitespaces (it made me change \n before the <p> instead of targeting that later)
-        // console.log(statsP);
+        // console/.log(statsP);
         statsP.textContent = matchCount
             ? `${matchCount} out of ${totalCount} matches of your skills and query`
             : "None match your skills or query";
@@ -735,7 +787,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 4. Update all UI components
 
         // 1###########################################
-        // console.log("#1");
+        // console/.log("#1");
 
         const searchFilter = () => {
             let sTerm = talc(searchInput.value);
@@ -745,8 +797,8 @@ document.addEventListener("DOMContentLoaded", () => {
             //     enteredSkills.length || manualFilters.length || sTerm
             //         ? allJobs
             //         : [];
-            // console.log("start fArray");
-            // console.log(fArray);
+            // console/.log("start fArray");
+            // console/.log(fArray);
 
             fArray = allJobs;
 
@@ -759,8 +811,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     )
                 );
             }
-            // console.log("skill array");
-            // console.log(fArray);
+            // console/.log("skill array");
+            // console/.log(fArray);
 
             if (manualFilters.length) {
                 fArray = fArray.filter((filter) =>
@@ -777,8 +829,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     )
                 );
             }
-            // console.log("tags array");
-            // console.log(fArray);
+            // console/.log("tags array");
+            // console/.log(fArray);
 
             if (sTerm) {
                 fArray = fArray.filter(
@@ -793,8 +845,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         talc(filter.location).includes(sTerm)
                 );
             }
-            // console.log("combined array");
-            // console.log(fArray);
+            // console/.log("combined array");
+            // console/.log(fArray);
 
             renderJobs(fArray);
             renderStats(
@@ -804,8 +856,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 allJobs.length
             );
 
-            // console.log("filtered array");
-            // console.log(fArray);
+            // console/.log("filtered array");
+            // console/.log(fArray);
         };
 
         searchFilter();
@@ -929,6 +981,11 @@ document.addEventListener("DOMContentLoaded", () => {
                   );
         jobListingsContainer.addEventListener("click", favoriteQuickFunc);
         favoriteJobsContainer.addEventListener("click", favoriteQuickFunc);
+
+        // manage listing EL
+        document
+            .getElementById("save-job-btn")
+            .addEventListener("click", handleManageFormSubmit);
 
         // adding manual filter tags
         renderManualFilterTags();
