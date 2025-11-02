@@ -158,6 +158,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Add error class to input
         // 2. Find error span element
         // 3. Display error message
+        input.classList.add("has-error");
+        input.nextElementSibling.textContent = message;
     };
 
     /**
@@ -169,6 +171,15 @@ document.addEventListener("DOMContentLoaded", () => {
         // TODO: Implement error clearing logic
         // 1. Remove error classes from inputs
         // 2. Clear error messages
+        const inputs = form.querySelectorAll(
+            "input:not([type='hidden']), textarea"
+        );
+        inputs.forEach((input) => {
+            input.classList.remove("has-error");
+            if (input.nextElementSibling) {
+                input.nextElementSibling.textContent = "";
+            }
+        });
     };
 
     /**
@@ -181,7 +192,22 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Check required fields
         // 2. Show errors if invalid
         // 3. Return validation result
-        return true;
+        clearErrors(profileForm);
+
+        let isValid = true;
+
+        if (!profileNameInput.value.trim()) {
+            showError(profileNameInput, "Full name is required.");
+            isValid = false;
+        }
+
+        if (!profilePositionInput.value.trim()) {
+            showError(profilePositionInput, "Desired position is required.");
+            isValid = false;
+        }
+
+        return isValid;
+        // return true;
     };
 
     /**
@@ -194,7 +220,61 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Validate all required fields
         // 2. Validate URL format for logo
         // 3. Show appropriate error messages
-        return true;
+        clearErrors(manageJobForm);
+
+        let isValid = true;
+
+        if (!jobCompanyInput.value.trim()) {
+            showError(jobCompanyInput, "Company name is required.");
+            isValid = false;
+        }
+
+        if (!jobPositionInput.value.trim()) {
+            showError(jobPositionInput, "Position is required.");
+            isValid = false;
+        }
+
+        if (!jobContractInput.value.trim()) {
+            showError(jobContractInput, "Contract type is required.");
+            isValid = false;
+        }
+
+        if (!jobLocationInput.value.trim()) {
+            showError(jobLocationInput, "Location is required.");
+            isValid = false;
+        }
+
+        if (!jobRoleInput.value.trim()) {
+            showError(jobRoleInput, "Role is required.");
+            isValid = false;
+        }
+
+        if (!jobLevelInput.value.trim()) {
+            showError(jobLevelInput, "Level is required.");
+            isValid = false;
+        }
+
+        if (!jobSkillsInput.value.trim()) {
+            showError(jobSkillsInput, "At least one skill is required.");
+            isValid = false;
+        }
+
+        if (!jobDescriptionInput.value.trim()) {
+            showError(jobDescriptionInput, "Description is required.");
+            isValid = false;
+        }
+
+        if (jobLogoInput.value.trim()) {
+            const urlPattern = /^https?:\/\/.+$/i;
+            if (!urlPattern.test(jobLogoInput.value.trim())) {
+                showError(jobLogoInput, "Logo URL must be a valid link");
+                isValid = false;
+            }
+        }
+
+        return isValid;
+
+        // return true;
     };
 
     // ------------------------------------
@@ -257,6 +337,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Validate form
         // 3. Save profile data
         // 4. Update filters if needed
+        e.preventDefault();
+        validateProfileForm();
     };
 
     /**
@@ -563,11 +645,11 @@ document.addEventListener("DOMContentLoaded", () => {
         //     </div>
         //  </li>`
         // if (allJobs.find(jobElem => jobElem.id === )) allJobs.push(job);
-        console.log("render manage list");
+        // console/.log("render manage list");
         const jobId = jobIdInput.getAttribute("value");
         if (!jobId) {
             jobIdInput.setAttribute("value", allJobs.at(-1).id + 1);
-            console.log("here");
+            // console/.log("here");
         }
 
         let job = { ...allJobs[0] };
@@ -598,7 +680,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
          </li>`;
         } else {
-            console.log("modifying");
+            // console/.log("modifying");
             allJobs.splice(jobId - 1, 1, job);
             manageJobsList.querySelector(
                 `[data-job-id='${jobId}']`
@@ -635,8 +717,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // 5. Save to localStorage
         // 6. Update UI and close modal
         e.preventDefault();
-        renderManageList();
-        closeManageModal();
+        if (validateJobForm()) {
+            renderManageList();
+            closeManageModal();
+        }
     };
 
     /**
@@ -1064,6 +1148,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // }
         // });
         manageJobsList.addEventListener("click", handleManageListClick);
+        // save profile
+        profileForm
+            .querySelector('[type="submit"]')
+            .addEventListener("click", handleProfileSave);
 
         // adding manual filter tags
         renderManualFilterTags();
